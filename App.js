@@ -1,3 +1,4 @@
+import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -11,8 +12,12 @@ const BUSSTOP_URL = "https://arrivelah2.busrouter.sg/?id=93069";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [arrival, setArrival] = useState("");
 
   function loadBusStopData() {
+    //Turn on the loading indictor each time
+    setLoading(true);
+
     fetch(BUSSTOP_URL)
       .then((response) => response.json())
       .then((responseData) => {
@@ -21,21 +26,30 @@ export default function App() {
         const myBus = responseData.services.filter(
           (item) => item.no === "14"
         )[0];
-        console.log("My bus:");
-        console.log(myBus);
+        //console.log("My bus:");
+        //console.log(myBus);
+        //setArrival(myBus.next.time);
+        //change arrival duration from milliseconds to mintues by /60000
+        setArrival(myBus.next.duration_ms / 60000);
+        setLoading(false);
       });
   }
 
   useEffect(() => {
     loadBusStopData();
+    const interval = setInterval(loadBusStopData, 15000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Bus arrival time:</Text>
-      <Text style={styles.arrivalTime}>
-        {loading ? <ActivityIndicator size="large" color="red" /> : "Loaded"}
+      <Text style={styles.title}>
+        Bus 14 arrival time at Siglap BusStop 93069:
       </Text>
+      <Text style={styles.arrivalTime}>
+        {loading ? <ActivityIndicator size="large" color="red" /> : arrival}
+      </Text>
+      <Text style={styles.title}>mintues</Text>
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Refresh!</Text>
       </TouchableOpacity>
