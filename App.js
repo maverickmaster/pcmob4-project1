@@ -10,12 +10,20 @@ import {
 const BUSSTOP_URL = "https://arrivelah2.busrouter.sg/?id=93069";
 
 export default function App() {
-  const [Loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   function loadBusStopData() {
     fetch(BUSSTOP_URL)
       .then((response) => response.json())
-      .then((responseData) => console.log(responseData));
+      .then((responseData) => {
+        //console.log(responseData)
+
+        const myBus = responseData.services.filter(
+          (item) => item.no === "14"
+        )[0];
+        console.log("My bus:");
+        console.log(myBus);
+      });
   }
 
   useEffect(() => {
@@ -26,7 +34,7 @@ export default function App() {
     <View style={styles.container}>
       <Text style={styles.title}>Bus arrival time:</Text>
       <Text style={styles.arrivalTime}>
-        {Loading ? <ActivityIndicator size="large" color="red" /> : "Loaded"}
+        {loading ? <ActivityIndicator size="large" color="red" /> : "Loaded"}
       </Text>
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Refresh!</Text>
