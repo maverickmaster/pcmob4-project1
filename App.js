@@ -40,7 +40,7 @@ export default function App() {
         if (duration_s < 0) {
           setArrival(`Bus has arrived`);
         } else {
-          setArrival(`${minutes} minutes and ${seconds} seconds`);
+          setArrival(`${minutes} minutes & ${seconds} seconds`);
         }
         setLoading(false);
       });
@@ -54,15 +54,14 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        Bus {BUS_NUMBER} arrival time at Siglap BusStop {BUSSTOP_NUMBER}:
-      </Text>
+      <Text style={styles.title}>Bus {BUS_NUMBER} arrival time</Text>
+      <Text style={styles.title}>Siglap BusStop {BUSSTOP_NUMBER}:</Text>
       <Text style={styles.arrivalTime}>
         {loading ? <ActivityIndicator size="large" color="red" /> : arrival}
       </Text>
       <Text style={styles.title}>mintues</Text>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Refresh!</Text>
+      <TouchableOpacity onPress={loadBusStopData} style={styles.button}>
+        <Text style={styles.buttonText}>Refresh</Text>
       </TouchableOpacity>
     </View>
   );
@@ -79,14 +78,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 32,
     marginBottom: 24,
+    textAlign: "center",
   },
   arrivalTime: {
     fontSize: 64,
     marginBottom: 32,
+    textAlign: "center",
   },
   button: {
     padding: 20,
     backgroundColor: "darkgreen",
+    borderRadius: 18,
   },
   buttonText: {
     fontSize: 32,
