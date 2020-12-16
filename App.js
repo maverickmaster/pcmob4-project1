@@ -8,7 +8,10 @@ import {
   View,
 } from "react-native";
 
-const BUSSTOP_URL = "https://arrivelah2.busrouter.sg/?id=93069";
+const BUSSTOP_NUMBER = "93069";
+const BUS_NUMBER = "14";
+const BUSSTOP_URL = "https://arrivelah2.busrouter.sg/?id=" + BUSSTOP_NUMBER;
+const LOADING_INTERVAL = 60000;
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -24,27 +27,35 @@ export default function App() {
         //console.log(responseData)
 
         const myBus = responseData.services.filter(
-          (item) => item.no === "14"
+          (item) => item.no === BUS_NUMBER
         )[0];
         //console.log("My bus:");
-        //console.log(myBus);
+        console.log(myBus);
         //setArrival(myBus.next.time);
-        //change arrival duration from milliseconds to mintues by /60000
-        setArrival(myBus.next.duration_ms / 60000);
+
+        //change arrival duration from milliseconds to mintues and seconds
+        const duration_s = Math.floor(myBus.next["duration_ms"] / 1000); // same as myBus.next.duration_ms
+        const minutes = Math.floor(duration_s / 60);
+        const seconds = duration_s % 60;
+        if (duration_s < 0) {
+          setArrival(`Bus has arrived`);
+        } else {
+          setArrival(`${minutes} minutes and ${seconds} seconds`);
+        }
         setLoading(false);
       });
   }
 
   useEffect(() => {
-    loadBusStopData();
-    const interval = setInterval(loadBusStopData, 15000);
+    loadBusStopData(); //need to call it once at start to show timing immediately
+    const interval = setInterval(loadBusStopData, LOADING_INTERVAL);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        Bus 14 arrival time at Siglap BusStop 93069:
+        Bus {BUS_NUMBER} arrival time at Siglap BusStop {BUSSTOP_NUMBER}:
       </Text>
       <Text style={styles.arrivalTime}>
         {loading ? <ActivityIndicator size="large" color="red" /> : arrival}
