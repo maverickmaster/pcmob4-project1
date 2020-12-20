@@ -31,8 +31,8 @@ export default function App() {
         )[0];
         //console.log("My bus:");
         console.log(myBus);
-        //setArrival(myBus.next.time);
 
+        //setArrival(myBus.next.time);
         //change arrival duration from milliseconds to mintues and seconds
         const duration_s = Math.floor(myBus.next["duration_ms"] / 1000); // same as myBus.next.duration_ms
         const minutes = Math.floor(duration_s / 60);
@@ -59,7 +59,6 @@ export default function App() {
       <Text style={styles.arrivalTime}>
         {loading ? <ActivityIndicator size="large" color="red" /> : arrival}
       </Text>
-      <Text style={styles.title}>mintues</Text>
       <TouchableOpacity onPress={loadBusStopData} style={styles.button}>
         <Text style={styles.buttonText}>Refresh</Text>
       </TouchableOpacity>
